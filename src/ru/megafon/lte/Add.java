@@ -10,7 +10,9 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Enumeration;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 
 /**
@@ -22,16 +24,21 @@ public class Add extends HttpServlet {
     private String Ip="";       // \
     private String Msisdn="";   //  | -инициализируем пустыми строками чтобы работали проверки .length()
     private String Route="";    // /
-    private boolean exist=false;  // для проверки что уже номер заведен в БД
+//    private boolean exist=false;  // для проверки что уже номер заведен в БД
     private final String SQL_CHECK_MSISDN="select * from radchecks where username=?";
-    private final String SQL_INS_IP="insert into radreplies (username,attrib,op,value) values (?,'Framed-IP-Address',':=',?)";
-    private final String SQL_IN_ROUTE="insert into radreplies (username,attrib,op,value) values (?,'Framed-Route','+=',?)";
+    private final String SQL_INS_MSISDN_AUTH="insert into radchecks (username,attrib,op,value) values (?,'clear',':=','password')";
+    private final String SQL_INS_IP="insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-IP-Address',':=',?,?,?)";
+    private final String SQL_IN_ROUTE="insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-Route','+=',?,?,?)";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        boolean exist=false;
         Enumeration<String> en = req.getParameterNames();
         Connection connection;
         PrintWriter pw = resp.getWriter();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date date = new java.util.Date();
+        String dateNow=sdf.format(date);
         while (en.hasMoreElements()) {
             String s = en.nextElement();
             if (s.compareTo("ip") == 0) {
@@ -46,39 +53,78 @@ public class Add extends HttpServlet {
         }
         if (getMsisdn().length() > 0 && (getIp().length() > 0 || getRoute().length() > 0)) {
             // Проверяем что номер не заведен в БД
-            connection=initConnection();
             try {
-                PreparedStatement stmt = connection.prepareStatement(SQL_CHECK_MSISDN);
-                stmt.setString(1, getMsisdn());
-                ResultSet resultSet = stmt.executeQuery();
-                if (resultSet.next()) {
-                    exist = true;
-                }
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            if (exist && getRoute().length() == 0) {    // если обычное добавление связки MSISDN-IP при существующей связке
-                printResponse(pw,600,null);
-                closeConnection();
-                return;
-            }
-            if (exist && getRoute().length() > 0 && getIp().length() > 0) {
+                InitialContext ctx = new InitialContext();
+                DataSource ds = (DataSource) ctx.lookup("jdbc/myresource");
+                connection=ds.getConnection();
                 try {
                     PreparedStatement stmt = connection.prepareStatement(SQL_CHECK_MSISDN);
                     stmt.setString(1, getMsisdn());
                     ResultSet resultSet = stmt.executeQuery();
                     if (resultSet.next()) {
-                        String msisdnE = resultSet.getString(2);
-                        printResponse(pw,600,msisdnE);
+                        exist = true;
                     }
                     stmt.close();
-                    closeConnection();
-                    return;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+
+                if (exist && getRoute().length() == 0) {    // если обычное добавление связки MSISDN-IP при существующей связке
+                    printResponse(pw, 600, null);
+                    connection.close();
+                    return;
+                }
+                if (exist && getRoute().length() > 0 && getIp().length() > 0) {  // msisdn=<yes>&ip=&route=
+                    try {
+                        PreparedStatement stmt = connection.prepareStatement(SQL_CHECK_MSISDN);
+                        stmt.setString(1, getMsisdn());
+                        ResultSet resultSet = stmt.executeQuery();
+                        if (resultSet.next()) {
+                            String msisdnE = resultSet.getString(2);
+                            printResponse(pw, 600, msisdnE);
+                        }
+                        stmt.close();
+                        connection.close();
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (!exist && getRoute().length() == 0 && getIp().length() > 0) {  // msisdn=<no>&ip= - добавить в обе таблицы
+                    PreparedStatement stmtauth = connection.prepareStatement(SQL_INS_MSISDN_AUTH);
+                    PreparedStatement stmt = connection.prepareStatement(SQL_INS_IP);
+                    stmtauth.setString(1,getMsisdn());
+                    stmt.setString(1, getMsisdn());
+                    stmt.setString(2, getIp());
+                    stmt.setString(3, dateNow);
+                    stmt.setString(4, dateNow);
+                    stmtauth.executeUpdate();
+                    stmt.executeUpdate();
+                    stmtauth.close();
+                    stmt.close();
+                    connection.close();
+                    printResponse(pw,200,null);
+                    return;
+                }
+                if (exist && getRoute().length() > 0 && getIp().length() == 0) {   // msisdn=<yes>&route= - добавить
+                    PreparedStatement stmtRoute = connection.prepareStatement(SQL_IN_ROUTE);
+                    stmtRoute.setString(1, getMsisdn());
+                    stmtRoute.setString(2, getRoute());
+                    stmtRoute.setString(3, dateNow);
+                    stmtRoute.setString(4, dateNow);
+                    stmtRoute.executeUpdate();
+                    stmtRoute.close();
+                    connection.close();
+                    printResponse(pw,200,null);
+                    return;
+                }
+                if (!exist && getRoute().length() > 0 && getIp().length() == 0) {
+                    printResponse(pw,600,null);
+                }
+            } catch (NamingException ne) {
+                ne.printStackTrace();
+            } catch (SQLException sqle) {
+                printResponse(pw,666,null);
             }
         }
     }
