@@ -29,10 +29,14 @@ public class Add extends HttpServlet {
 
         try {
             existInDb = connector.check(req.getParameter("msisdn"));      //проверяем присутствие номера в БД
-            int type = doCheck(req);                  // 1 - msisdn+ip
+
+            // 1 - msisdn+ip
             // 2 - msisdn+ip+route
             // 3 - msisdn+route
             // 0 - other
+            int type = doCheck(req);
+
+
             if (type == 0) {
                 printResponse(pw, 600, null);
                 return;
@@ -41,9 +45,8 @@ public class Add extends HttpServlet {
             if (type == 1) {
                 String msisdn = req.getParameter("msisdn");
                 String ip = ipVerify(req.getParameter("ip"));
-                System.out.println("ip = "+ip);
                 if (ip == null) {
-                    printResponse(pw, 300, null);
+                    printResponse(pw, 600, null);
                     return;
                 }
                 if (existInDb) {
@@ -60,10 +63,16 @@ public class Add extends HttpServlet {
             if (type == 2) {
                 String msisdn = req.getParameter("msisdn");
                 String ip = ipVerify(req.getParameter("ip"));
-                String route = req.getParameter("route");
+                String route = routeVerify(req.getParameter("route"));
+
 
                 if (ip == null) {
-                    printResponse(pw, 300, null);
+                    printResponse(pw, 600, null);
+                    return;
+                }
+                if (route == null) {
+                    printResponse(pw, 600, null);
+                    return;
                 }
                 if (existInDb) {
                     printResponse(pw, 600, null);
@@ -79,8 +88,12 @@ public class Add extends HttpServlet {
             }
             if (type == 3) {
                 String msisdn = req.getParameter("msisdn");
-                String route = req.getParameter("route");
+                String route = routeVerify(req.getParameter("route"));
                 if (!existInDb) {
+                    printResponse(pw, 600, null);
+                    return;
+                }
+                if (route == null) {
                     printResponse(pw, 600, null);
                     return;
                 }
@@ -144,6 +157,27 @@ public class Add extends HttpServlet {
                     correctIp.append('.');
             }
             return correctIp.toString();
+        }
+        else
+            return null;
+
+    }
+    private String routeVerify(String route) {
+        if (route.length()>0) {
+            String[] arOfNetAndMask = route.split("\\/");
+            if (arOfNetAndMask.length==2) {
+                String arOfOctet = ipVerify(arOfNetAndMask[0]);         // октеты сети
+                Integer mask = Integer.parseInt(arOfNetAndMask[1]);     // маска сети
+                if (arOfOctet == null) {
+                    return null;
+                }
+                if (mask == null) {
+                    return null;
+                }
+                return arOfOctet + "/" + mask;
+            }
+            else
+                return null;
         }
         else
             return null;
