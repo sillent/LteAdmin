@@ -40,7 +40,12 @@ public class Add extends HttpServlet {
 
             if (type == 1) {
                 String msisdn = req.getParameter("msisdn");
-                String ip = req.getParameter("ip");
+                String ip = ipVerify(req.getParameter("ip"));
+                System.out.println("ip = "+ip);
+                if (ip == null) {
+                    printResponse(pw, 300, null);
+                    return;
+                }
                 if (existInDb) {
                     printResponse(pw, 600, null);
                     return;
@@ -54,9 +59,12 @@ public class Add extends HttpServlet {
             }
             if (type == 2) {
                 String msisdn = req.getParameter("msisdn");
-                String ip = req.getParameter("ip");
+                String ip = ipVerify(req.getParameter("ip"));
                 String route = req.getParameter("route");
 
+                if (ip == null) {
+                    printResponse(pw, 300, null);
+                }
                 if (existInDb) {
                     printResponse(pw, 600, null);
                     return;
@@ -123,6 +131,23 @@ public class Add extends HttpServlet {
             System.out.println("return else");
             return 0;
         }
+    }
+
+    private String ipVerify(String msisdn) {
+        String[] arOfOctet = msisdn.split("\\.");
+
+        if (arOfOctet.length == 4) {
+            StringBuilder correctIp = new StringBuilder();
+            for (int i = 0; i < arOfOctet.length; i++) {
+                correctIp.append(Integer.parseInt(arOfOctet[i]));
+                if (i!=3)
+                    correctIp.append('.');
+            }
+            return correctIp.toString();
+        }
+        else
+            return null;
+
     }
 
     public void printResponse(PrintWriter pw, int code, String msisdn_exist) {
