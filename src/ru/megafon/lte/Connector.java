@@ -58,13 +58,16 @@ public class Connector {
         }
     }
 
-    public boolean check(String msisdn) throws SQLException {
-        if (msisdn.length()<=0) {
+    public boolean checkParamExist(String msisdn) throws SQLException {
+        if (msisdn == null) {       // нет параметра msisdn
+            return false;
+        }
+        if (msisdn.length() <= 0) {
             return false;
         }
         PreparedStatement stmt = connection.prepareStatement(SQL_CHECK_MSISDN);
         stmt.setString(1, msisdn);
-        ResultSet resultSet=stmt.executeQuery();
+        ResultSet resultSet = stmt.executeQuery();
         if (resultSet.next()) {
             stmt.close();
             return true;

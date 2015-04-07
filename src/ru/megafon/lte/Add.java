@@ -28,8 +28,11 @@ public class Add extends HttpServlet {
 
 
         try {
-            existInDb = connector.check(req.getParameter("msisdn"));      //проверяем присутствие номера в БД
-
+            existInDb = connector.checkParamExist(req.getParameter("msisdn"));      //проверяем присутствие номера в БД
+            if (req.getParameter("msisdn") == null) {
+                printResponse(pw, 600, null);
+                return;
+            }
             // 1 - msisdn+ip
             // 2 - msisdn+ip+route
             // 3 - msisdn+route
