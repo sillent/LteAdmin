@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -155,9 +154,16 @@ public class Add extends HttpServlet {
         if (arOfOctet.length == 4) {
             StringBuilder correctIp = new StringBuilder();
             for (int i = 0; i < arOfOctet.length; i++) {
-                correctIp.append(Integer.parseInt(arOfOctet[i]));
-                if (i!=3)
-                    correctIp.append('.');
+                if (arOfOctet[i].length() > 0) {
+                    try {
+                        correctIp.append(Integer.parseInt(arOfOctet[i]));
+                    } catch (NumberFormatException nme) {
+                        return null;
+                    }
+                    if (i != 3)
+                        correctIp.append('.');
+                } else
+                    return null;
             }
             return correctIp.toString();
         }
@@ -170,14 +176,19 @@ public class Add extends HttpServlet {
             String[] arOfNetAndMask = route.split("\\/");
             if (arOfNetAndMask.length==2) {
                 String arOfOctet = ipVerify(arOfNetAndMask[0]);         // октеты сети
-                Integer mask = Integer.parseInt(arOfNetAndMask[1]);     // маска сети
-                if (arOfOctet == null) {
+                try {
+                    Integer mask = Integer.parseInt(arOfNetAndMask[1]);     // маска сети
+
+                    if (arOfOctet == null) {
+                        return null;
+                    }
+                    if (mask == null) {
+                        return null;
+                    }
+                    return arOfOctet + "/" + mask;
+                } catch (NumberFormatException nmbe) {
                     return null;
                 }
-                if (mask == null) {
-                    return null;
-                }
-                return arOfOctet + "/" + mask;
             }
             else
                 return null;
