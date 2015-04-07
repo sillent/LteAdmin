@@ -25,7 +25,9 @@ public class Connector {
     private  String SQL_CHECK_MSISDN="select * from radchecks where username=?";
     private  String SQL_INS_MSISDN_AUTH="insert into radchecks (username,attrib,op,value) values (?,'clear',':=','password')";
     private  String SQL_INS_IP="insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-IP-Address',':=',?,?,?)";
-    private  String SQL_INS_ROUTE="insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-Route','+=',?,?,?)";
+    private String SQL_INS_ROUTE = "insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-Route','+=',?,?,?)";
+    private String SQL_DEL_MSISDN_RADCHECK = "delete from radchecks where username=?";
+    private String SQL_DEL_MSISDN_RADREPL = "delete from radreplies where username=?";
     private Connection connection;
 
     HashMap<String, String> map;
@@ -88,10 +90,22 @@ public class Connector {
         insert(map, Type.IPREPL);
     }
     public void insertRouteInReplies(String msisdn, String route) throws SQLException {
-
         map.put("msisdn",msisdn);
         map.put("route", route);
         insert(map,Type.ROUTREPL);
+    }
+
+    public void deleteMsisdn(String msisdn) throws SQLException {
+        PreparedStatement stmtc,stmtr;
+        stmtc = connection.prepareStatement(SQL_DEL_MSISDN_RADCHECK);
+        stmtr = connection.prepareStatement(SQL_DEL_MSISDN_RADREPL);
+        stmtc.setString(1, msisdn);
+        stmtr.setString(1, msisdn);
+        stmtc.executeUpdate();
+        stmtr.executeUpdate();
+        stmtc.close();
+        stmtr.close();
+        return;
     }
 
     public void insert(HashMap<String, String> arg, Type type) {

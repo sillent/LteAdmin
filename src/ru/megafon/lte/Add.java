@@ -198,7 +198,7 @@ public class Add extends HttpServlet {
 
     }
 
-    public void printResponse(PrintWriter pw, int code, String msisdn_exist) {
+    private void printResponse(PrintWriter pw, int code, String msisdn_exist) {
         pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         pw.println("<result>");
         pw.println("<code>" + code + "</code>");
