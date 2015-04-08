@@ -54,9 +54,9 @@ public class Connector {
         return connection;
     }
 
-    private void closeConnection(Connection conn) {
+    public void closeConnection() {
         try {
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

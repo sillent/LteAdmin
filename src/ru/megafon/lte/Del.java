@@ -24,17 +24,20 @@ public class Del extends HttpServlet {
             if (!existInDb) {
                 printResponse(pw, 200, null);
                 System.out.println("not exist in delete");
+                connector.closeConnection();
                 return;
             }
             if (existInDb) {
                 connector.deleteMsisdn(req.getParameter("msisdn"));
                 printResponse(pw, 200, null);
+                connector.closeConnection();
                 System.out.println("exist in delete");
                 return;
             }
 
         } catch (SQLException e) {
-            printResponse(pw,600,null);
+            printResponse(pw, 600, null);
+            connector.closeConnection();
             return;
         }
     }

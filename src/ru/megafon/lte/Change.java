@@ -25,16 +25,19 @@ public class Change extends HttpServlet {
         if (check==0) {
             System.out.println("change 0");
             printResponse(pw, 600, null);
+            connector.closeConnection();
             return;
         }
         if (check==3) {
             System.out.println("change 3");
             printResponse(pw, 600, null);
+            connector.closeConnection();
             return;
         }
         if (check == 2) {
             System.out.println("change 2");
             printResponse(pw, 600, null);
+            connector.closeConnection();
             return;
         }
         if (check == 1) {
@@ -46,14 +49,17 @@ public class Change extends HttpServlet {
                     String _new = req.getParameter("msisdnNew");
                     connector.update(_old, _new);
                     printResponse(pw, 200, null);
+                    connector.closeConnection();
                     return;
                 } else {
                     printResponse(pw, 300, null);
+                    connector.closeConnection();
                     return;
                 }
             } catch (SQLException sqlExc) {
                 System.out.println("in except");
                 printResponse(pw, 600, null);
+                connector.closeConnection();
                 return;
             }
 

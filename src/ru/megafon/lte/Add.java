@@ -30,6 +30,7 @@ public class Add extends HttpServlet {
             existInDb = connector.checkParamExist(req.getParameter("msisdn"));      //проверяем присутствие номера в БД
             if (req.getParameter("msisdn") == null) {
                 printResponse(pw, 600, null);
+                connector.closeConnection();
                 return;
             }
             // 1 - msisdn+ip
@@ -41,6 +42,7 @@ public class Add extends HttpServlet {
 
             if (type == 0) {
                 printResponse(pw, 600, null);
+                connector.closeConnection();
                 return;
             }
 
@@ -49,16 +51,19 @@ public class Add extends HttpServlet {
                 String ip = ipVerify(req.getParameter("ip"));
                 if (ip == null) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (!existInDb) {
                     connector.insertMsisdnInChecks(msisdn);
                     connector.insertIpInReplies(msisdn, ip);
                     printResponse(pw, 200, null);
+                    connector.closeConnection();
                     return;
                 }
             }
@@ -70,14 +75,17 @@ public class Add extends HttpServlet {
 
                 if (ip == null) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (route == null) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (!existInDb) {
@@ -85,6 +93,7 @@ public class Add extends HttpServlet {
                     connector.insertIpInReplies(msisdn, ip);
                     connector.insertRouteInReplies(msisdn, route);
                     printResponse(pw, 200, null);
+                    connector.closeConnection();
                     return;
                 }
             }
@@ -93,21 +102,25 @@ public class Add extends HttpServlet {
                 String route = routeVerify(req.getParameter("route"));
                 if (!existInDb) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (route == null) {
                     printResponse(pw, 600, null);
+                    connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
                     connector.insertRouteInReplies(msisdn, route);
                     printResponse(pw, 200, null);
+                    connector.closeConnection();
                     return;
                 }
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            connector.closeConnection();
         }
     }
 
