@@ -21,4 +21,13 @@
         <servlet-name>Del</servlet-name>
         <url-pattern>/del</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Change</servlet-name>
+        <servlet-class>ru.megafon.lte.Change</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Change</servlet-name>
+        <url-pattern>/change</url-pattern>
+    </servlet-mapping>
 </web-app>

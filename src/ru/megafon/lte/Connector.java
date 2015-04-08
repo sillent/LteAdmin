@@ -28,6 +28,8 @@ public class Connector {
     private String SQL_INS_ROUTE = "insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-Route','+=',?,?,?)";
     private String SQL_DEL_MSISDN_RADCHECK = "delete from radchecks where username=?";
     private String SQL_DEL_MSISDN_RADREPL = "delete from radreplies where username=?";
+    private String SQL_UPD_MSISDN_IN_CHECK = "update radchecks set username=? where username=?";
+    private String SQL_UPD_MSISDN_IN_REPL="update radreplies set username=? where username=?";
     private Connection connection;
 
     HashMap<String, String> map;
@@ -105,7 +107,20 @@ public class Connector {
         stmtr.executeUpdate();
         stmtc.close();
         stmtr.close();
-        return;
+    }
+
+    public void update(String _old, String _new) throws SQLException {
+        PreparedStatement stmtc,stmtr;
+        stmtc = connection.prepareStatement(SQL_UPD_MSISDN_IN_CHECK);
+        stmtr = connection.prepareStatement(SQL_UPD_MSISDN_IN_REPL);
+        stmtc.setString(1, _new);
+        stmtc.setString(2, _old);
+        stmtr.setString(1, _new);
+        stmtr.setString(2, _old);
+        stmtc.executeUpdate();
+        stmtr.executeUpdate();
+        stmtc.close();
+        stmtr.close();
     }
 
     public void insert(HashMap<String, String> arg, Type type) {
