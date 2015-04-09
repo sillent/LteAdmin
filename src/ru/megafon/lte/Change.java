@@ -21,22 +21,22 @@ public class Change extends HttpServlet {
         connector = new Connector();
 
         int check = doCheckParameter(req);
-        if (check==0) {
-            printResponse(resp, 600, null);
+        if (check==0) {                             // 0 - msisdn & msisdnNew not exist
+            printResponse(resp, 300, null);
             connector.closeConnection();
             return;
         }
-        if (check==3) {
-            printResponse(resp, 600, null);
+        if (check==3) {                             // 3 - msisdnNew exist, msisdn not
+            printResponse(resp, 300, null);
             connector.closeConnection();
             return;
         }
-        if (check == 2) {
-            printResponse(resp, 600, null);
+        if (check == 2) {                           // 2 - msisdn  exist, msisdnNew not
+            printResponse(resp, 300, null);
             connector.closeConnection();
             return;
         }
-        if (check == 1) {
+        if (check == 1) {                           // 1 - msisdn & msisdnNew  exist
             try {
                 if (connector.checkParamExist(req.getParameter("msisdn"))) {
                     String _old = req.getParameter("msisdn");
@@ -51,7 +51,7 @@ public class Change extends HttpServlet {
                     return;
                 }
             } catch (SQLException sqlExc) {
-                printResponse(resp, 600, null);
+                printResponse(resp, 666, null);
                 connector.closeConnection();
                 return;
             }

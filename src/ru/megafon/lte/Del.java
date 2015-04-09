@@ -21,7 +21,7 @@ public class Del extends HttpServlet {
             existInDb = connector.checkParamExist(req.getParameter("msisdn"));
 
             if (!existInDb) {
-                printResponse(resp, 200, null);
+                printResponse(resp, 404, null);
                 connector.closeConnection();
                 return;
             }

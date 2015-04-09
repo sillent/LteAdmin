@@ -73,12 +73,12 @@ public class Add extends HttpServlet {
 
 
                 if (ip == null) {
-                    printResponse(resp, 600, null);
+                    printResponse(resp, 300, null);
                     connector.closeConnection();
                     return;
                 }
                 if (route == null) {
-                    printResponse(resp, 600, null);
+                    printResponse(resp, 300, null);
                     connector.closeConnection();
                     return;
                 }
@@ -100,12 +100,12 @@ public class Add extends HttpServlet {
                 String msisdn = req.getParameter("msisdn");
                 String route = routeVerify(req.getParameter("route"));
                 if (!existInDb) {
-                    printResponse(resp, 600, null);
+                    printResponse(resp, 300, null);
                     connector.closeConnection();
                     return;
                 }
                 if (route == null) {
-                    printResponse(resp, 600, null);
+                    printResponse(resp, 300, null);
                     connector.closeConnection();
                     return;
                 }
