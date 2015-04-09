@@ -17,30 +17,31 @@ public class Del extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         boolean existInDb;
         connector = new Connector();
-        PrintWriter pw=resp.getWriter();
         try {
             existInDb = connector.checkParamExist(req.getParameter("msisdn"));
 
             if (!existInDb) {
-                printResponse(pw, 200, null);
+                printResponse(resp, 200, null);
                 connector.closeConnection();
                 return;
             }
             if (existInDb) {
                 connector.deleteMsisdn(req.getParameter("msisdn"));
-                printResponse(pw, 200, null);
+                printResponse(resp, 200, null);
                 connector.closeConnection();
                 return;
             }
 
         } catch (SQLException e) {
-            printResponse(pw, 600, null);
+            printResponse(resp, 600, null);
             connector.closeConnection();
             return;
         }
     }
 
-    private void printResponse(PrintWriter pw, int code, String msisdn_exist) {
+    private void printResponse(HttpServletResponse response, int code, String msisdn_exist) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter pw = response.getWriter();
         pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         pw.println("<result>");
         pw.println("<code>" + code + "</code>");

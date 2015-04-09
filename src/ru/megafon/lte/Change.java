@@ -20,20 +20,19 @@ public class Change extends HttpServlet {
 
         connector = new Connector();
 
-        PrintWriter pw = resp.getWriter();
         int check = doCheckParameter(req);
         if (check==0) {
-            printResponse(pw, 600, null);
+            printResponse(resp, 600, null);
             connector.closeConnection();
             return;
         }
         if (check==3) {
-            printResponse(pw, 600, null);
+            printResponse(resp, 600, null);
             connector.closeConnection();
             return;
         }
         if (check == 2) {
-            printResponse(pw, 600, null);
+            printResponse(resp, 600, null);
             connector.closeConnection();
             return;
         }
@@ -43,16 +42,16 @@ public class Change extends HttpServlet {
                     String _old = req.getParameter("msisdn");
                     String _new = req.getParameter("msisdnNew");
                     connector.update(_old, _new);
-                    printResponse(pw, 200, null);
+                    printResponse(resp, 200, null);
                     connector.closeConnection();
                     return;
                 } else {
-                    printResponse(pw, 300, null);
+                    printResponse(resp, 300, null);
                     connector.closeConnection();
                     return;
                 }
             } catch (SQLException sqlExc) {
-                printResponse(pw, 600, null);
+                printResponse(resp, 600, null);
                 connector.closeConnection();
                 return;
             }
@@ -61,7 +60,9 @@ public class Change extends HttpServlet {
     }
 
 
-    private void printResponse(PrintWriter pw, int code, String msisdn_exist) {
+    private void printResponse(HttpServletResponse response, int code, String msisdn_exist) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter pw = response.getWriter();
         pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         pw.println("<result>");
         pw.println("<code>" + code + "</code>");

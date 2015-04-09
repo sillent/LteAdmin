@@ -21,7 +21,6 @@ public class Add extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         boolean existInDb;
-        PrintWriter pw = resp.getWriter();
         // Connection initization
         connector = new Connector();
 
@@ -29,7 +28,7 @@ public class Add extends HttpServlet {
         try {
             existInDb = connector.checkParamExist(req.getParameter("msisdn"));      //проверяем присутствие номера в БД
             if (req.getParameter("msisdn") == null) {
-                printResponse(pw, 600, null);
+                printResponse(resp, 600, null);
                 connector.closeConnection();
                 return;
             }
@@ -41,7 +40,7 @@ public class Add extends HttpServlet {
 
 
             if (type == 0) {
-                printResponse(pw, 600, null);
+                printResponse(resp, 600, null);
                 connector.closeConnection();
                 return;
             }
@@ -50,19 +49,19 @@ public class Add extends HttpServlet {
                 String msisdn = req.getParameter("msisdn");
                 String ip = ipVerify(req.getParameter("ip"));
                 if (ip == null) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (!existInDb) {
                     connector.insertMsisdnInChecks(msisdn);
                     connector.insertIpInReplies(msisdn, ip);
-                    printResponse(pw, 200, null);
+                    printResponse(resp, 200, null);
                     connector.closeConnection();
                     return;
                 }
@@ -74,17 +73,17 @@ public class Add extends HttpServlet {
 
 
                 if (ip == null) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (route == null) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
@@ -92,7 +91,7 @@ public class Add extends HttpServlet {
                     connector.insertMsisdnInChecks(msisdn);
                     connector.insertIpInReplies(msisdn, ip);
                     connector.insertRouteInReplies(msisdn, route);
-                    printResponse(pw, 200, null);
+                    printResponse(resp, 200, null);
                     connector.closeConnection();
                     return;
                 }
@@ -101,18 +100,18 @@ public class Add extends HttpServlet {
                 String msisdn = req.getParameter("msisdn");
                 String route = routeVerify(req.getParameter("route"));
                 if (!existInDb) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (route == null) {
-                    printResponse(pw, 600, null);
+                    printResponse(resp, 600, null);
                     connector.closeConnection();
                     return;
                 }
                 if (existInDb) {
                     connector.insertRouteInReplies(msisdn, route);
-                    printResponse(pw, 200, null);
+                    printResponse(resp, 200, null);
                     connector.closeConnection();
                     return;
                 }
@@ -202,7 +201,9 @@ public class Add extends HttpServlet {
 
     }
 
-    private void printResponse(PrintWriter pw, int code, String msisdn_exist) {
+    private void printResponse(HttpServletResponse response, int code, String msisdn_exist) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter pw = response.getWriter();
         pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         pw.println("<result>");
         pw.println("<code>" + code + "</code>");
