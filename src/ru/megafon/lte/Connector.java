@@ -82,7 +82,6 @@ public class Connector {
     }
     public void insertMsisdnInChecks(String msisdn) throws SQLException {
         map.put("msisdn", msisdn);
-        System.out.println("map msisdn=" + map.get("msisdn"));
         insert(map, Type.MSAUTH);
     }
 
@@ -131,10 +130,8 @@ public class Connector {
         PreparedStatement stmt;
         if (type == Type.MSAUTH) {
             try {
-                System.out.println("execute insert MSAUTH");
                 stmt = connection.prepareStatement(SQL_INS_MSISDN_AUTH);
                 stmt.setString(1, msisdn);
-                System.out.println(stmt.toString());
                 stmt.executeUpdate();
                 stmt.close();
             } catch (SQLException e) {

@@ -23,7 +23,6 @@ public class Del extends HttpServlet {
 
             if (!existInDb) {
                 printResponse(pw, 200, null);
-                System.out.println("not exist in delete");
                 connector.closeConnection();
                 return;
             }
@@ -31,7 +30,6 @@ public class Del extends HttpServlet {
                 connector.deleteMsisdn(req.getParameter("msisdn"));
                 printResponse(pw, 200, null);
                 connector.closeConnection();
-                System.out.println("exist in delete");
                 return;
             }
 

@@ -23,28 +23,23 @@ public class Change extends HttpServlet {
         PrintWriter pw = resp.getWriter();
         int check = doCheckParameter(req);
         if (check==0) {
-            System.out.println("change 0");
             printResponse(pw, 600, null);
             connector.closeConnection();
             return;
         }
         if (check==3) {
-            System.out.println("change 3");
             printResponse(pw, 600, null);
             connector.closeConnection();
             return;
         }
         if (check == 2) {
-            System.out.println("change 2");
             printResponse(pw, 600, null);
             connector.closeConnection();
             return;
         }
         if (check == 1) {
-            System.out.println("change 1");
             try {
                 if (connector.checkParamExist(req.getParameter("msisdn"))) {
-                    System.out.println("in change");
                     String _old = req.getParameter("msisdn");
                     String _new = req.getParameter("msisdnNew");
                     connector.update(_old, _new);
@@ -57,7 +52,6 @@ public class Change extends HttpServlet {
                     return;
                 }
             } catch (SQLException sqlExc) {
-                System.out.println("in except");
                 printResponse(pw, 600, null);
                 connector.closeConnection();
                 return;
@@ -84,7 +78,6 @@ public class Change extends HttpServlet {
         Enumeration<String> params = request.getParameterNames();
         while (params.hasMoreElements()) {
             String pm = params.nextElement();
-            System.out.println("pm = "+pm);
             if (pm.equals("msisdn")) {
                 msisdn=true;
             }

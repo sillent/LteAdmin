@@ -131,32 +131,23 @@ public class Add extends HttpServlet {
             String pname = paramNameEnum.nextElement();
             if (pname.equals("msisdn")) {
                 msisdn = true;
-                System.out.println("msisdn set to true");
             }
             if (pname.equals("ip")) {
                 ip = true;
-                System.out.println("ip set to true");
             }
             if (pname.equals("route")) {
                 route = true;
-                System.out.println("route set to true");
             }
-            System.out.println("pname = "+pname);
         }
         if (msisdn && !ip && !route) {
-            System.out.println("return 0");
             return 0;
         } else if (msisdn && ip && !route) {
-            System.out.println("return 1");
             return 1;
         } else if (msisdn && ip && route) {
-            System.out.println("return 2");
             return 2;
         } else if (msisdn && !ip && route) {
-            System.out.println("return 3");
             return 3;
         } else {
-            System.out.println("return else");
             return 0;
         }
     }
