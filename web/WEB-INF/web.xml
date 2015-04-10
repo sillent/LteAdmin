@@ -30,4 +30,13 @@
         <servlet-name>Change</servlet-name>
         <url-pattern>/change</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Keepaliver</servlet-name>
+        <servlet-class>ru.megafon.lte.Keepalive</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Keepalive</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 </web-app>
