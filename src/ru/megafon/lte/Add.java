@@ -203,6 +203,7 @@ public class Add extends HttpServlet {
 
     private void printResponse(HttpServletResponse response, int code, String msisdn_exist) throws IOException {
         response.setContentType("text/html");
+        response.setStatus(code);
         PrintWriter pw = response.getWriter();
         pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         pw.println("<result>");
