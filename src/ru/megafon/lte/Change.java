@@ -40,7 +40,7 @@ public class Change extends HttpServlet {
             try {
                 if (connector.checkParamExist(req.getParameter("msisdn"))) {
                     String _old = req.getParameter("msisdn");
-                    String _new = req.getParameter("msisdnNew");
+                    String _new = req.getParameter("newmsisdn");
                     connector.update(_old, _new);
                     printResponse(resp, 200, null);
                     connector.closeConnection();
@@ -83,7 +83,7 @@ public class Change extends HttpServlet {
             if (pm.equals("msisdn")) {
                 msisdn=true;
             }
-            if (pm.equals("msisdnNew")) {
+            if (pm.equals("newmsisdn")) {
                 msisdnNew=true;
             }
         }
