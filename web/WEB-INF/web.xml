@@ -5,33 +5,6 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>Add</servlet-name>
-        <servlet-class>ru.megafon.lte.Add</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Add</servlet-name>
-        <url-pattern>/add</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Del</servlet-name>
-        <servlet-class>ru.megafon.lte.Del</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Del</servlet-name>
-        <url-pattern>/del</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Change</servlet-name>
-        <servlet-class>ru.megafon.lte.Change</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Change</servlet-name>
-        <url-pattern>/change</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Keepaliver</servlet-name>
         <servlet-class>ru.megafon.lte.Keepalive</servlet-class>
     </servlet>

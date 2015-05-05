@@ -23,7 +23,7 @@ public class Connector {
     }
 
     private  String SQL_CHECK_MSISDN="select * from radchecks where username=?";
-    private  String SQL_INS_MSISDN_AUTH="insert into radchecks (username,attrib,op,value) values (?,'clear',':=','password')";
+    private  String SQL_INS_MSISDN_AUTH="insert into radchecks (username,attrib,op,value) values (?,'Cleartext-Password',':=','password')";
     private  String SQL_INS_IP="insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-IP-Address',':=',?,?,?)";
     private String SQL_INS_ROUTE = "insert into radreplies (username,attrib,op,value,created_at,updated_at) values (?,'Framed-Route','+=',?,?,?)";
     private String SQL_DEL_MSISDN_RADCHECK = "delete from radchecks where username=?";
@@ -61,6 +61,7 @@ public class Connector {
             e.printStackTrace();
         }
     }
+
 
     public boolean checkParamExist(String msisdn) throws SQLException {
         if (msisdn == null) {       // нет параметра msisdn

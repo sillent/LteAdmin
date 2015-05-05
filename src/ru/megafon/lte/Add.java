@@ -2,6 +2,7 @@ package ru.megafon.lte;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import java.util.*;
  * Created by Dmitry Ulyanov on 30.03.15.
  * Senjor Manager
  */
+@WebServlet(loadOnStartup = 1,urlPatterns = {"/add"})
 public class Add extends HttpServlet {
     Connector connector;
 

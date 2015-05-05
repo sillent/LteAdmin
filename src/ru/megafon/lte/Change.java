@@ -1,6 +1,7 @@
 package ru.megafon.lte;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import java.util.Enumeration;
 /**
  * Created by santa on 07.04.15.
  */
+@WebServlet(loadOnStartup = 1,urlPatterns = {"/change"})
 public class Change extends HttpServlet {
     Connector connector;
 

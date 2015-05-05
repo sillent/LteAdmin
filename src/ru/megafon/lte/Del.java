@@ -1,6 +1,7 @@
 package ru.megafon.lte;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 /**
  * Created by santa on 30.03.15.
  */
+@WebServlet(loadOnStartup = 1,urlPatterns = {"/del"})
 public class Del extends HttpServlet {
     Connector connector;
     @Override
